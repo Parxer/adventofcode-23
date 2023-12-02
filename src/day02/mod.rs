@@ -28,6 +28,7 @@ fn compare_assign_max(color: &str, value: u32, rgb_max: &mut [u32; 3]) {
 
 pub fn run_day_02(input: String, part: Part) -> u32 {
     let mut result = 0;
+
     for line in input.lines() {
         let (game_str, draws_str) = line.split_once(':').unwrap();
         let game_num = game_str.split_ascii_whitespace().last().unwrap();
@@ -36,8 +37,10 @@ pub fn run_day_02(input: String, part: Part) -> u32 {
 
         let mut rgb_max: [u32; 3] = [0, 0, 0];
         let mut is_game_valid = true;
+
         for draw in draws {
             let colors: Vec<&str> = draw.split(',').collect();
+
             for color_str in colors {
                 let mut color_iter = color_str.split_ascii_whitespace();
                 let num = u32::from_str_radix(color_iter.next().unwrap(), 10).unwrap();
@@ -51,15 +54,22 @@ pub fn run_day_02(input: String, part: Part) -> u32 {
             if part == Part::First && !is_game_valid { break; }
         }
 
-        if env::var("AOC_DEBUG").is_ok() { println!("Game {game_num} is {}VALID", if !is_game_valid { "IN" } else { "" }); }
-        if env::var("AOC_DEBUG").is_ok() { println!("Game maximums are: {rgb_max:?}"); }
-
-        if part == Part::First {
-            if is_game_valid {
-                result += u32::from_str_radix(game_num, 10).expect("Failed to parse game num");
+        if env::var("AOC_DEBUG").is_ok() {
+            match part {
+                Part::First => { println!("Game {game_num} is {}VALID", if !is_game_valid { "IN" } else { "" }); }
+                Part::Second => { println!("Game maximums are: {rgb_max:?}"); }
             }
-        } else {
-            result += rgb_max.iter().fold(1, |pow, item  | item * pow);
+        }
+
+        match part {
+            Part::First => {
+                if is_game_valid {
+                    result += u32::from_str_radix(game_num, 10).expect("Failed to parse game num");
+                }
+            }
+            Part::Second => {
+                result += rgb_max.iter().fold(1, |pow, item  | item * pow);
+            }
         }
     }
     return result;
