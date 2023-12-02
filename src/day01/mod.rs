@@ -6,7 +6,10 @@ enum Position {
     Last
 }
 
-pub fn run_day_01(input: String, numeric_only: bool) -> u32 {
+pub fn run_day_01(input: String, part: Part) -> u32 {
+    let mut numeric_only: bool = false;
+    if part == Part::First { numeric_only = true; }
+
     let mut result = 0;
     for line in input.lines() {
         let (i_num_first, num_first) = find_numeric_item(line, Position::First);
@@ -87,6 +90,7 @@ fn find_spelled_item(line: String, position: Position) -> (usize, u32) {
 use std::fs::File;
 #[cfg(test)]
 use std::io::Read;
+use crate::common::Part;
 
 
 #[test]
@@ -96,7 +100,7 @@ fn test_sample_input_1() {
     let mut sample_input_1 = String::new();
     File::open("src/day01/test_input_1").expect("Failed to open sample input").read_to_string(&mut sample_input_1).ok();
 
-    let result = run_day_01(sample_input_1, true);
+    let result = run_day_01(sample_input_1, Part::First);
     assert_eq!(result, 142);
 }
 
@@ -107,6 +111,6 @@ fn test_sample_input_2() {
     let mut sample_input_2 = String::new();
     File::open("src/day01/test_input_2").expect("Failed to open sample input").read_to_string(&mut sample_input_2).ok();
 
-    let result = run_day_01(sample_input_2, false);
+    let result = run_day_01(sample_input_2, Part::Second);
     assert_eq!(result, 434);
 }
