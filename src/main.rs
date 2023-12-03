@@ -1,6 +1,7 @@
 pub mod common;
 pub mod day01;
 pub mod day02;
+pub mod day03;
 
 use std::env;
 use std::error::Error;
@@ -10,6 +11,7 @@ use aocf::Aoc;
 use day01::run_day_01;
 use day02::run_day_02;
 use crate::common::Part;
+use crate::day03::run_day_03;
 
 fn main() {
     dotenv().ok();
@@ -23,6 +25,10 @@ fn main() {
 
     if let Ok(input) = get_day(year, 2, &session_cookie) {
         print_day(2, run_day_02(input, Part::Second));
+    }
+
+    if let Ok(input) = get_day(year, 3, &session_cookie) {
+        print_day(3, run_day_03(input, Part::First));
     }
 }
 
