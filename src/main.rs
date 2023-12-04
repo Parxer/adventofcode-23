@@ -34,7 +34,7 @@ fn main() {
     }
 
     if let Ok(input) = get_day(year, 4, &session_cookie) {
-        print_day(4, run_day_04(input, Part::First));
+        print_day(4, run_day_04(input, Part::Second));
     }
 }
 
