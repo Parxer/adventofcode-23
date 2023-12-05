@@ -1,5 +1,12 @@
 use aho_corasick::{AhoCorasick};
 use std::{env, usize};
+use crate::common::Part;
+
+#[cfg(test)]
+use std::fs::File;
+#[cfg(test)]
+use std::io::Read;
+
 
 enum Position {
     First,
@@ -85,13 +92,6 @@ fn find_spelled_item(line: String, position: Position) -> (usize, u32) {
         }
     }
 }
-
-#[cfg(test)]
-use std::fs::File;
-#[cfg(test)]
-use std::io::Read;
-use crate::common::Part;
-
 
 #[test]
 fn test_sample_input_1() {

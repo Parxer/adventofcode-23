@@ -1,19 +1,21 @@
 pub mod common;
-pub mod day01;
-pub mod day02;
-pub mod day03;
-pub mod day04;
+mod day01;
+mod day02;
+mod day03;
+mod day04;
+mod day05;
 
 use std::env;
 use std::error::Error;
 use dotenv::dotenv;
 use aocf::Aoc;
 
-use day01::run_day_01;
-use day02::run_day_02;
 use crate::common::Part;
+use crate::day01::run_day_01;
+use crate::day02::run_day_02;
 use crate::day03::run_day_03;
 use crate::day04::run_day_04;
+use crate::day05::run_day_05;
 
 fn main() {
     dotenv().ok();
@@ -36,6 +38,10 @@ fn main() {
     if let Ok(input) = get_day(year, 4, &session_cookie) {
         print_day(4, run_day_04(input, Part::Second));
     }
+
+    if let Ok(input) = get_day(year, 5, &session_cookie) {
+        print_day(5, run_day_05(input, Part::Second));
+    }
 }
 
 fn get_day(year: i32, day: u32, session_cookie: &Option<String>) -> Result<String, Box<dyn Error>> {
@@ -44,7 +50,7 @@ fn get_day(year: i32, day: u32, session_cookie: &Option<String>) -> Result<Strin
         aoc = aoc.cookie(session_str);
     }
 
-    aoc = aoc.init().unwrap();
+    aoc = aoc.init().expect("Failed to initialize aoc");
     let input = aoc.get_input(false)?;
     Ok(input)
 }

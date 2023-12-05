@@ -1,7 +1,10 @@
 use std::env;
-use std::fs::File;
-use std::io::Read;
 use crate::common::Part;
+
+#[cfg(test)]
+use std::fs::File;
+#[cfg(test)]
+use std::io::Read;
 
 #[derive(Debug)]
 struct Number {

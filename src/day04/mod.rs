@@ -1,7 +1,10 @@
 use std::env;
-use std::fs::File;
-use std::io::Read;
 use crate::common::Part;
+
+#[cfg(test)]
+use std::fs::File;
+#[cfg(test)]
+use std::io::Read;
 
 pub fn run_day_04(input: String, part: Part) -> u32 {
     let mut result = 0;

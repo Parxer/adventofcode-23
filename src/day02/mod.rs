@@ -1,8 +1,11 @@
 use std::cmp::max;
 use std::env;
-use std::fs::File;
-use std::io::Read;
 use crate::common::Part;
+
+#[cfg(test)]
+use std::fs::File;
+#[cfg(test)]
+use std::io::Read;
 
 const R_MAX: u32 = 12;
 const G_MAX: u32 = 13;
