@@ -27,9 +27,7 @@ pub fn run_day_05(input: String, part: Part) -> u32 {
                     None => { break; }
                     Some(&start) => {
                         let &range = seeds_iter.next().unwrap();
-                        for value in start..=start + (range-1) {
-                            values.push(value);
-                        }
+                        values.append(&mut (start..start + (range-1)).into_par_iter().collect());
                     }
                 }
             }
@@ -56,11 +54,14 @@ pub fn run_day_05(input: String, part: Part) -> u32 {
                         let src = maps[1];
                         let range = maps[2];
 
-                        let indices_in_range: Vec<usize> = values.par_iter().enumerate().filter(|(i, &val)| val >= src && val <= src + (range - 1)).map(|(i, &val)| i).collect();
-                        for index in indices_in_range {
-                            if dest > src { new_values[index] += dest-src; } else { new_values[index] -= src-dest; }
-                        };
-
+                        values
+                            .par_iter()
+                            .zip(new_values.par_iter_mut())
+                            .filter(|(&val, _)| val >= src && val <= src + (range - 1) )
+                            .for_each(|(value, new_value)| {
+                                let diff = value - src;
+                                *new_value = dest + diff;
+                            });
                     }
                 }
             }
