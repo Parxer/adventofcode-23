@@ -1,28 +1,33 @@
 use std::env;
 use std::fs::File;
 use std::io::Read;
-use std::iter::Map;
-use std::str::SplitAsciiWhitespace;
 use rayon::prelude::*;
 use crate::common::{Part};
 
-fn get_parsed_numbers_iter (line: &str) -> Map<SplitAsciiWhitespace, fn(&str) -> u32> {
-    line.split_once(':').unwrap().1.split_ascii_whitespace().map(|n| n.parse::<u32>().unwrap())
+fn get_parsed_numbers (line: &str, part: &Part) -> Vec<u64> {
+    let str = line.split_once(':').unwrap().1;
+    match part {
+        Part::First => { str.split_ascii_whitespace().map(|n| n.parse::<u64>().unwrap()).collect() }
+        Part::Second => {
+            let num_str: String = str.chars().filter(|c| !c.is_whitespace()).collect();
+            vec![num_str.parse::<u64>().unwrap()]
+        }
+    }
 }
 
 pub fn run_day_06(input: String, part: Part) -> u32 {
     let mut result = 1;
 
     let mut line_iter = input.lines().into_iter();
-    let times = get_parsed_numbers_iter(line_iter.next().unwrap());
-    let distances = get_parsed_numbers_iter(line_iter.next().unwrap());
-    let mut races_iter = times.zip(distances);
+    let times = get_parsed_numbers(line_iter.next().unwrap(), &part);
+    let distances = get_parsed_numbers(line_iter.next().unwrap(), &part);
+    let mut races_iter = times.iter().zip(distances.iter());
 
     loop {
         match races_iter.next() {
             None => { break; }
-            Some((time, distance)) => {
-                let wins_iter = (0u32..=time).into_par_iter().filter(|&speed| {
+            Some((&time, &distance)) => {
+                let wins_iter = (0..=time).into_par_iter().filter(|&speed| {
                     let time_moving = time - speed;
                     time_moving * speed > distance
                 });
@@ -54,5 +59,5 @@ fn test_part_2() {
     File::open("src/day06/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
     let result = run_day_06(sample_input, Part::Second);
-    assert_eq!(result, 0);
+    assert_eq!(result, 71503);
 }

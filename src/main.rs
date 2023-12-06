@@ -12,11 +12,11 @@ use dotenv::dotenv;
 use aocf::Aoc;
 
 use crate::common::Part;
-use crate::day01::run_day_01;
-use crate::day02::run_day_02;
-use crate::day03::run_day_03;
-use crate::day04::run_day_04;
-use crate::day05::run_day_05;
+// use crate::day01::run_day_01;
+// use crate::day02::run_day_02;
+// use crate::day03::run_day_03;
+// use crate::day04::run_day_04;
+// use crate::day05::run_day_05;
 use crate::day06::run_day_06;
 
 fn main() {
@@ -46,7 +46,7 @@ fn main() {
     // }
 
     if let Ok(input) = get_day(year, 6, &session_cookie) {
-        print_day(6, run_day_06(input, Part::First));
+        print_day(6, run_day_06(input, Part::Second));
     }
 }
 
