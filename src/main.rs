@@ -52,7 +52,7 @@ fn main() {
     // }
 
     if let Ok(input) = get_day(year, 7, &session_cookie) {
-        print_day(7, run_day_07(input, Part::First));
+        print_day(7, run_day_07(input, Part::Second));
     }
 }
 

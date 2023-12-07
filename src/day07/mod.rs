@@ -1,12 +1,12 @@
 use std::cmp::Ordering;
-use std::collections::{BinaryHeap, BTreeMap, HashMap};
+use std::collections::{HashMap, HashSet};
 use std::env;
 use std::fs::File;
 use std::io::Read;
 use crate::common::Part;
 
-#[derive(Eq, PartialEq, Ord, PartialOrd)]
-enum HandTypes {
+#[derive(Eq, PartialEq, Ord, PartialOrd, Copy, Clone, Debug)]
+enum HandType {
     HighCard,
     OnePair,
     TwoPair,
@@ -33,7 +33,16 @@ fn card_to_value (card: char, part: Part) -> u32 {
 }
 
 fn cmp_hands (left: &str, right: &str, part: Part) -> Ordering {
-    match get_hand_type(left, part).cmp(&get_hand_type(right, part)) {
+    let cmp = match part {
+        Part::First => { get_hand_type(left).cmp(&get_hand_type(right))}
+        Part::Second => {
+            let mut best_left = if left.contains('J') { get_best_hand_type(left) } else { get_hand_type(left) };
+            let mut best_right = if right.contains('J') { get_best_hand_type(right) } else { get_hand_type(right) };
+            best_left.cmp(&best_right)
+        }
+    };
+
+    match cmp {
         Ordering::Equal => {
             match left.chars().zip(right.chars()).find(|(l, r)| card_to_value(*l, part) != card_to_value(*r, part)) {
                 None => { Ordering::Equal },
@@ -44,7 +53,22 @@ fn cmp_hands (left: &str, right: &str, part: Part) -> Ordering {
     }
 }
 
-fn get_hand_type (hand: &str, part: Part) -> HandTypes {
+fn get_best_hand_type(hand: &str) -> HandType {
+    if hand.chars().find(|c| *c == 'J') == None { return get_hand_type(hand) }
+
+    let mut other_cards = hand.chars().filter(|c| *c != 'J').collect::<HashSet<_>>();
+    if other_cards.is_empty() { other_cards.extend(['A']) }
+
+    let mut combinations: Vec<HandType> = vec![];
+    for &card in &other_cards {
+        combinations.push(get_hand_type(str::replace(hand, 'J', card.to_string().as_str()).as_str()));
+    }
+
+    let max = *combinations.iter().max().unwrap();
+    max
+}
+
+fn get_hand_type (hand: &str) -> HandType {
     let mut hand: Vec<usize> = hand.chars().fold(HashMap::<char, usize>::new(), |mut h, x | {
         *h.entry(x).or_default() += 1;
         h
@@ -53,11 +77,11 @@ fn get_hand_type (hand: &str, part: Part) -> HandTypes {
     let mut max_two_iter = hand.iter().rev().take(2);
     let max_two = max_two_iter.collect::<Vec<_>>();
     match max_two[0] {
-        &5 => { HandTypes::FiveOfAKind },
-        &4 => { HandTypes::FourOfAKind },
-        &3 => { if *max_two[1] == 2 { HandTypes::FullHouse } else { HandTypes::ThreeOfAKind } },
-        &2 => { if *max_two[1] == 2 { HandTypes::TwoPair } else { HandTypes::OnePair } },
-        _ => HandTypes::HighCard
+        &5 => { HandType::FiveOfAKind },
+        &4 => { HandType::FourOfAKind },
+        &3 => { if *max_two[1] == 2 { HandType::FullHouse } else { HandType::ThreeOfAKind } },
+        &2 => { if *max_two[1] == 2 { HandType::TwoPair } else { HandType::OnePair } },
+        _ => HandType::HighCard
     }
 }
 
