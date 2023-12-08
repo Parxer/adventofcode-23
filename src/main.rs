@@ -1,11 +1,12 @@
 pub mod common;
-mod day01;
-mod day02;
-mod day03;
-mod day04;
-mod day05;
-mod day06;
-mod day07;
+// mod day01;
+// mod day02;
+// mod day03;
+// mod day04;
+// mod day05;
+// mod day06;
+// mod day07;
+mod day08;
 
 use std::env;
 use std::error::Error;
@@ -19,7 +20,8 @@ use crate::common::Part;
 // use crate::day04::run_day_04;
 // use crate::day05::run_day_05;
 // use crate::day06::run_day_06;
-use crate::day07::run_day_07;
+// use crate::day07::run_day_07;
+use crate::day08::run_day_08;
 
 fn main() {
     dotenv().ok();
@@ -51,8 +53,14 @@ fn main() {
     //     print_day(6, run_day_06(input, Part::Second));
     // }
 
-    if let Ok(input) = get_day(year, 7, &session_cookie) {
-        print_day(7, run_day_07(input, Part::Second));
+    // if let Ok(input) = get_day(year, 7, &session_cookie) {
+    //     print_day(7, run_day_07(input, Part::Second));
+    // }
+
+    if let Ok(input) = get_day(year, 8, &session_cookie) {
+        println!("Day 8 result: \n{}", run_day_08(input, Part::Second));
+        println!("- - - - - - - -");
+        println!("\n\n");
     }
 }
 
