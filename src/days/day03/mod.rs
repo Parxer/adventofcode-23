@@ -35,7 +35,7 @@ fn neighbors_with_symbol(number: &Number, matrix: &Vec<Vec<bool>>) -> bool {
 }
 
 pub fn run(input: &String, part: Part) -> String {
-    if part == Part::Second { "N/A" }
+    if part == Part::Second { return format!("N/A") }
     let mut result: u32 = 0;
 
     let w = input.lines().peekable().peek().unwrap().len();
@@ -82,10 +82,6 @@ pub fn run(input: &String, part: Part) -> String {
     for number in numbers {
         let has_symbol = neighbors_with_symbol(&number, &matrix);
         if has_symbol { result += number.value; }
-
-        if env::var("AOC_DEBUG").is_ok() {
-            println!(" Number {} (line {}, chars {}-{}) {} a neighbor", number.value, number.start[0], number.start[1], number.end[1], if has_symbol { "HAS" } else { "DOESN'T HAVE" });
-        }
     }
 
     format!("{result}")
