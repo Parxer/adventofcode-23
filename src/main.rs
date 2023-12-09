@@ -6,7 +6,8 @@ pub mod common;
 // mod day05;
 // mod day06;
 // mod day07;
-mod day08;
+// mod day08;
+mod day09;
 
 use std::env;
 use std::error::Error;
@@ -14,14 +15,16 @@ use dotenv::dotenv;
 use aocf::Aoc;
 
 use crate::common::Part;
-// use crate::day01::run_day_01;
-// use crate::day02::run_day_02;
-// use crate::day03::run_day_03;
-// use crate::day04::run_day_04;
-// use crate::day05::run_day_05;
-// use crate::day06::run_day_06;
+// use crate::day08::run_day_08;
 // use crate::day07::run_day_07;
-use crate::day08::run_day_08;
+// use crate::day06::run_day_06;
+// use crate::day05::run_day_05;
+// use crate::day04::run_day_04;
+// use crate::day03::run_day_03;
+// use crate::day02::run_day_02;
+// use crate::day01::run_day_01;
+use crate::day09::run_day_09;
+
 
 fn main() {
     dotenv().ok();
@@ -57,10 +60,14 @@ fn main() {
     //     print_day(7, run_day_07(input, Part::Second));
     // }
 
-    if let Ok(input) = get_day(year, 8, &session_cookie) {
-        println!("Day 8 result: \n{}", run_day_08(input, Part::Second));
-        println!("- - - - - - - -");
-        println!("\n\n");
+    // if let Ok(input) = get_day(year, 8, &session_cookie) {
+    //     println!("Day 8 result: \n{}", run_day_08(input, Part::Second));
+    //     println!("- - - - - - - -");
+    //     println!("\n\n");
+    // }
+
+    if let Ok(input) = get_day(year, 9, &session_cookie) {
+        print_day(9, run_day_09(input, Part::First));
     }
 }
 
