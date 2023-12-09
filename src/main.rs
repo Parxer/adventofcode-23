@@ -67,7 +67,7 @@ fn main() {
     // }
 
     if let Ok(input) = get_day(year, 9, &session_cookie) {
-        print_day(9, run_day_09(input, Part::First));
+        print_day(9, run_day_09(input, Part::Second));
     }
 }
 
@@ -82,7 +82,7 @@ fn get_day(year: i32, day: u32, session_cookie: &Option<String>) -> Result<Strin
     Ok(input)
 }
 
-fn print_day(day: u32, result: u32) {
+fn print_day(day: u32, result: String) {
     println!("Day {day} result:");
     println!("{result}");
     println!("- - - - - - - -");
