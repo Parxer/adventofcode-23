@@ -1,0 +1,37 @@
+use std::env;
+use std::fs::File;
+use std::io::Read;
+use crate::common::Part;
+
+pub fn run(input: &String, part: Part) -> String {
+    if part == Part::Second { "N/A" } // TODO: delete later
+    let mut result = 0;
+
+    for line in input.lines() {
+        result += 1;
+    }
+
+    format!("{result}")
+}
+
+#[test]
+fn test_part_1() {
+    env::set_var("AOC_DEBUG", "1");
+
+    let mut sample_input = String::new();
+    File::open("src/days/day${DAY}/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+
+    let result = run(&sample_input, Part::First);
+    assert_eq!(result, "${RESULT_1}");
+}
+
+#[test]
+fn test_part_2() {
+    env::set_var("AOC_DEBUG", "1");
+
+    let mut sample_input = String::new();
+    File::open("src/days/day${DAY}/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+
+    let result = run(&sample_input, Part::Second);
+    assert_eq!(result, "${RESULT_2}");
+}
