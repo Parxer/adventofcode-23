@@ -15,7 +15,7 @@ fn get_parsed_numbers (line: &str, part: &Part) -> Vec<u64> {
     }
 }
 
-pub fn run_day_06(input: String, part: Part) -> u32 {
+pub fn run(input: &String, part: Part) -> String {
     let mut result = 1;
 
     let mut line_iter = input.lines().into_iter();
@@ -37,7 +37,7 @@ pub fn run_day_06(input: String, part: Part) -> u32 {
         }
     }
 
-    result
+    format!("{result}")
 }
 
 #[test]
@@ -45,10 +45,10 @@ fn test_part_1() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day06/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day06/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_06(sample_input, Part::First);
-    assert_eq!(result, 288);
+    let result = run(&sample_input, Part::First);
+    assert_eq!(result, "288");
 }
 
 #[test]
@@ -56,8 +56,8 @@ fn test_part_2() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day06/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day06/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_06(sample_input, Part::Second);
-    assert_eq!(result, 71503);
+    let result = run(&sample_input, Part::Second);
+    assert_eq!(result, "71503");
 }

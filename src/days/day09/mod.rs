@@ -4,7 +4,7 @@ use std::fs::File;
 #[cfg(test)]
 use std::io::Read;
 use rayon::iter::*;
-use rayon::prelude::*;
+// use rayon::prelude::*;
 use crate::common::Part;
 use crate::debug;
 
@@ -18,7 +18,7 @@ fn get_next_step(steps: Vec<i32>, part: Part) -> i32 {
     } }
 }
 
-pub fn run_day_09(input: String, part: Part) -> String {
+pub fn run(input: &String, part: Part) -> String {
 
     let mut histories: Vec<Vec<i32>> = vec![];
 
@@ -40,9 +40,9 @@ fn test_part_1() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day09/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day09/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_09(sample_input, Part::First);
+    let result = run(&sample_input, Part::First);
     assert_eq!(result, "114");
 }
 
@@ -51,8 +51,8 @@ fn test_part_2() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day09/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day09/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_09(sample_input, Part::Second);
+    let result = run(&sample_input, Part::Second);
     assert_eq!(result, "2");
 }

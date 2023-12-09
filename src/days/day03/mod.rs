@@ -34,7 +34,7 @@ fn neighbors_with_symbol(number: &Number, matrix: &Vec<Vec<bool>>) -> bool {
     false
 }
 
-pub fn run_day_03(input: String, _part: Part) -> u32 {
+pub fn run(input: &String, _part: Part) -> String {
     let mut result: u32 = 0;
 
     let w = input.lines().peekable().peek().unwrap().len();
@@ -87,7 +87,7 @@ pub fn run_day_03(input: String, _part: Part) -> u32 {
         }
     }
 
-    result
+    format!("{result}")
 }
 
 #[test]
@@ -95,8 +95,19 @@ fn test_part_1() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day03/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day03/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_03(sample_input, Part::First);
-    assert_eq!(result, 4474);
+    let result = run(&sample_input, Part::First);
+    assert_eq!(result, "4474");
+}
+
+#[test]
+fn test_part_2() {
+    env::set_var("AOC_DEBUG", "1");
+
+    let mut sample_input = String::new();
+    File::open("src/days/day03/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+
+    let result = run(&sample_input, Part::Second);
+    assert_eq!(result, "467835");
 }

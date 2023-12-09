@@ -1,73 +1,38 @@
 pub mod common;
-// mod day01;
-// mod day02;
-// mod day03;
-// mod day04;
-// mod day05;
-// mod day06;
-// mod day07;
-// mod day08;
-mod day09;
+mod days;
 
+use days::{ day01, day02, day03, day04, day05, day06, day07, day08, day09 };
 use std::env;
 use std::error::Error;
 use dotenv::dotenv;
 use aocf::Aoc;
+use chrono::{Datelike, Local};
 
 use crate::common::Part;
-// use crate::day08::run_day_08;
-// use crate::day07::run_day_07;
-// use crate::day06::run_day_06;
-// use crate::day05::run_day_05;
-// use crate::day04::run_day_04;
-// use crate::day03::run_day_03;
-// use crate::day02::run_day_02;
-// use crate::day01::run_day_01;
-use crate::day09::run_day_09;
-
 
 fn main() {
     dotenv().ok();
 
-    let year = 2023;
-    let session_cookie: Option<String> = env::var("AOC_SESSION_COOKIE").ok();
+    let today = Local::now().date_naive();
+    let year = today.year();
+    let session_cookie: &Option<String> = &env::var("AOC_SESSION_COOKIE").ok();
 
-    // if let Ok(input) = get_day(year, 1, &session_cookie) {
-    //     print_day(1, run_day_01(input, Part::Second));
-    // }
-    //
-    // if let Ok(input) = get_day(year, 2, &session_cookie) {
-    //     print_day(2, run_day_02(input, Part::Second));
-    // }
-    //
-    // if let Ok(input) = get_day(year, 3, &session_cookie) {
-    //     print_day(3, run_day_03(input, Part::First));
-    // }
-    //
-    // if let Ok(input) = get_day(year, 4, &session_cookie) {
-    //     print_day(4, run_day_04(input, Part::Second));
-    // }
-    //
-    // if let Ok(input) = get_day(year, 5, &session_cookie) {
-    //     print_day(5, run_day_05(input, Part::Second));
-    // }
+    let args: Vec<String> = env::args().collect();
+    if args.len() < 2 {
+        println!("No day arguments found; running for today ({today:?})");
+    }
 
-    // if let Ok(input) = get_day(year, 6, &session_cookie) {
-    //     print_day(6, run_day_06(input, Part::Second));
-    // }
+    let mut days: Vec<u32> = args[1..]
+        .iter()
+        .map(|x| {
+            x.parse()
+                .unwrap_or_else(|v| panic!("Not a valid day: {}", v))
+        })
+        .collect();
 
-    // if let Ok(input) = get_day(year, 7, &session_cookie) {
-    //     print_day(7, run_day_07(input, Part::Second));
-    // }
-
-    // if let Ok(input) = get_day(year, 8, &session_cookie) {
-    //     println!("Day 8 result: \n{}", run_day_08(input, Part::Second));
-    //     println!("- - - - - - - -");
-    //     println!("\n\n");
-    // }
-
-    if let Ok(input) = get_day(year, 9, &session_cookie) {
-        print_day(9, run_day_09(input, Part::Second));
+    if days.len() == 0 { days.push(today.day()); }
+    for day in days {
+        run_day(year, day, session_cookie);
     }
 }
 
@@ -82,9 +47,29 @@ fn get_day(year: i32, day: u32, session_cookie: &Option<String>) -> Result<Strin
     Ok(input)
 }
 
-fn print_day(day: u32, result: String) {
-    println!("Day {day} result:");
-    println!("{result}");
+fn run_day(year: i32, day: u32, session_cookie: &Option<String>) {
+    let run = match day {
+        1 => day01::run,
+        2 => day02::run,
+        3 => day03::run,
+        4 => day04::run,
+        5 => day05::run,
+        6 => day06::run,
+        7 => day07::run,
+        8 => day08::run,
+        9 => day09::run,
+        _ => unimplemented!()
+    };
+
+    if let Ok(input) = get_day(year, day, session_cookie) {
+        print_day(day, run(&input, Part::First), run(&input, Part::Second));
+    }
+}
+
+fn print_day(day: u32, first_result: String, second_result: String) {
+    println!("Day {day} results:");
+    println!("Part 1: {first_result}");
+    println!("Part 2: {second_result}");
     println!("- - - - - - - -");
     println!("\n\n");
 }

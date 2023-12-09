@@ -6,7 +6,7 @@ use std::fs::File;
 #[cfg(test)]
 use std::io::Read;
 
-pub fn run_day_04(input: String, part: Part) -> u32 {
+pub fn run(input: &String, part: Part) -> String {
     let mut result = 0;
     let mut card_counts: Vec<u32> = vec![1; input.lines().count()];
 
@@ -45,7 +45,7 @@ pub fn run_day_04(input: String, part: Part) -> u32 {
 
     if part == Part::Second { result = card_counts.iter().fold(0, |sum, item| item + sum); }
 
-    result
+    format!("{result}")
 }
 
 #[test]
@@ -53,10 +53,10 @@ fn test_part_1() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day04/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day04/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_04(sample_input, Part::First);
-    assert_eq!(result, 13);
+    let result = run(&sample_input, Part::First);
+    assert_eq!(result, "13");
 }
 
 #[test]
@@ -64,8 +64,8 @@ fn test_part_2() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day04/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day04/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_04(sample_input, Part::Second);
-    assert_eq!(result, 30);
+    let result = run(&sample_input, Part::Second);
+    assert_eq!(result, "30");
 }

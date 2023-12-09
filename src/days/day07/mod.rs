@@ -1,7 +1,9 @@
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 use std::env;
+#[cfg(test)]
 use std::fs::File;
+#[cfg(test)]
 use std::io::Read;
 use crate::common::Part;
 
@@ -36,8 +38,8 @@ fn cmp_hands (left: &str, right: &str, part: Part) -> Ordering {
     let cmp = match part {
         Part::First => { get_hand_type(left).cmp(&get_hand_type(right))}
         Part::Second => {
-            let mut best_left = if left.contains('J') { get_best_hand_type(left) } else { get_hand_type(left) };
-            let mut best_right = if right.contains('J') { get_best_hand_type(right) } else { get_hand_type(right) };
+            let best_left = if left.contains('J') { get_best_hand_type(left) } else { get_hand_type(left) };
+            let best_right = if right.contains('J') { get_best_hand_type(right) } else { get_hand_type(right) };
             best_left.cmp(&best_right)
         }
     };
@@ -72,9 +74,9 @@ fn get_hand_type (hand: &str) -> HandType {
     let mut hand: Vec<usize> = hand.chars().fold(HashMap::<char, usize>::new(), |mut h, x | {
         *h.entry(x).or_default() += 1;
         h
-    }).into_iter().map(|(key, val)| val).collect();
+    }).into_iter().map(|(_, val)| val).collect();
     hand.sort();
-    let mut max_two_iter = hand.iter().rev().take(2);
+    let max_two_iter = hand.iter().rev().take(2);
     let max_two = max_two_iter.collect::<Vec<_>>();
     match max_two[0] {
         &5 => { HandType::FiveOfAKind },
@@ -85,7 +87,7 @@ fn get_hand_type (hand: &str) -> HandType {
     }
 }
 
-pub fn run_day_07(input: String, part: Part) -> u32 {
+pub fn run(input: &String, part: Part) -> String {
     let mut result = 0;
     let mut hands: Vec<(&str, u32)> = vec![];
 
@@ -100,7 +102,7 @@ pub fn run_day_07(input: String, part: Part) -> u32 {
         result += (u32::try_from(i+1).unwrap()) * score;
     });
 
-    result
+    format!("{result}")
 }
 
 #[test]
@@ -108,10 +110,10 @@ fn test_part_1() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day07/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day07/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_07(sample_input, Part::First);
-    assert_eq!(result, 6440);
+    let result = run(&sample_input, Part::First);
+    assert_eq!(result, "6440");
 }
 
 #[test]
@@ -119,8 +121,8 @@ fn test_part_2() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day07/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day07/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_07(sample_input, Part::Second);
-    assert_eq!(result, 5905);
+    let result = run(&sample_input, Part::Second);
+    assert_eq!(result, "5905");
 }

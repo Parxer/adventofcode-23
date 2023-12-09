@@ -29,7 +29,7 @@ fn compare_assign_max(color: &str, value: u32, rgb_max: &mut [u32; 3]) {
     }
 }
 
-pub fn run_day_02(input: String, part: Part) -> u32 {
+pub fn run(input: &String, part: Part) -> String {
     let mut result = 0;
 
     for line in input.lines() {
@@ -75,7 +75,7 @@ pub fn run_day_02(input: String, part: Part) -> u32 {
             }
         }
     }
-    return result;
+    format!("{result}")
 }
 
 #[test]
@@ -83,10 +83,10 @@ fn test_part_1() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input_1 = String::new();
-    File::open("src/day02/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input_1).ok();
+    File::open("src/days/day02/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input_1).ok();
 
-    let result = run_day_02(sample_input_1, Part::First);
-    assert_eq!(result, 8);
+    let result = run(&sample_input_1, Part::First);
+    assert_eq!(result, "8");
 }
 
 #[test]
@@ -94,8 +94,8 @@ fn test_part_2() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input_2 = String::new();
-    File::open("src/day02/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input_2).ok();
+    File::open("src/days/day02/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input_2).ok();
 
-    let result = run_day_02(sample_input_2, Part::Second);
-    assert_eq!(result, 2286);
+    let result = run(&sample_input_2, Part::Second);
+    assert_eq!(result, "2286");
 }

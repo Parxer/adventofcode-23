@@ -7,7 +7,7 @@ use rayon::prelude::*;
 use crate::common::Part;
 use crate::debug;
 
-pub fn run_day_08(input: String, part: Part) -> u64 {
+pub fn run(input: &String, part: Part) -> String {
     let mut lines_iter = input.lines();
     let instructions = lines_iter.next().unwrap();
     lines_iter.next();
@@ -29,7 +29,7 @@ pub fn run_day_08(input: String, part: Part) -> u64 {
     }).collect();
 
     debug!(mappings);
-    let mut starting_indices: Vec<usize> = match part {
+    let starting_indices: Vec<usize> = match part {
         Part::First => { vec![nodes.iter().position(|&node| node == "AAA").unwrap()]}
         Part::Second => { nodes.iter().enumerate().filter_map(|(i, &node)| if node.ends_with("A") { Some(i) } else { None }).collect() }
     };
@@ -52,7 +52,7 @@ pub fn run_day_08(input: String, part: Part) -> u64 {
         result
     }).collect();
 
-    results.iter().fold(1, |acc, &next| lcm(acc, next))
+    format!("{}", results.iter().fold(1, |acc, &next| lcm(acc, next)))
 }
 
 #[test]
@@ -60,10 +60,10 @@ fn test_part_1() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day08/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day08/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_08(sample_input, Part::First);
-    assert_eq!(result, 2);
+    let result = run(&sample_input, Part::First);
+    assert_eq!(result, "2");
 }
 
 #[test]
@@ -71,8 +71,8 @@ fn test_part_2() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day08/test_input_2").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day08/test_input_2").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_08(sample_input, Part::Second);
-    assert_eq!(result, 6);
+    let result = run(&sample_input, Part::Second);
+    assert_eq!(result, "6");
 }

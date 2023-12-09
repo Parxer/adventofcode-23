@@ -13,7 +13,7 @@ enum Position {
     Last
 }
 
-pub fn run_day_01(input: String, part: Part) -> u32 {
+pub fn run(input: &String, part: Part) -> String {
     let mut numeric_only: bool = false;
     if part == Part::First { numeric_only = true; }
 
@@ -44,7 +44,8 @@ pub fn run_day_01(input: String, part: Part) -> u32 {
         println!("First spelled is {} at index {}, last spelled is {} at index {}", spelled_first, i_spelled_first, spelled_last, i_spelled_last);
         println!("Result is: {}\n\n\n\n", line_result);
     }
-    result
+
+    format!("{result}")
 }
 
 fn find_numeric_item(line: &str, position: Position) -> (usize, u32) {
@@ -98,10 +99,10 @@ fn test_sample_input_1() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input_1 = String::new();
-    File::open("src/day01/test_input_1").expect("Failed to open sample input").read_to_string(&mut sample_input_1).ok();
+    File::open("src/days/day01/test_input_1").expect("Failed to open sample input").read_to_string(&mut sample_input_1).ok();
 
-    let result = run_day_01(sample_input_1, Part::First);
-    assert_eq!(result, 142);
+    let result = run(&sample_input_1, Part::First);
+    assert_eq!(result, "142");
 }
 
 #[test]
@@ -109,8 +110,8 @@ fn test_sample_input_2() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input_2 = String::new();
-    File::open("src/day01/test_input_2").expect("Failed to open sample input").read_to_string(&mut sample_input_2).ok();
+    File::open("src/days/day01/test_input_2").expect("Failed to open sample input").read_to_string(&mut sample_input_2).ok();
 
-    let result = run_day_01(sample_input_2, Part::Second);
-    assert_eq!(result, 434);
+    let result = run(&sample_input_2, Part::Second);
+    assert_eq!(result, "434");
 }

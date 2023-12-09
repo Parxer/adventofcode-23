@@ -10,7 +10,7 @@ use std::io::Read;
 
 const STEPS: &'static [&'static str] = &["soil", "fertilizer", "water", "light", "temperature", "humidity", "location"];
 
-pub fn run_day_05(input: String, part: Part) -> u32 {
+pub fn run(input: &String, part: Part) -> String {
     let mut result = 0;
 
     let mut input_iter = input.lines();
@@ -72,7 +72,7 @@ pub fn run_day_05(input: String, part: Part) -> u32 {
 
     result += values.iter().min().ok_or_else(|| 0).unwrap();
 
-    result
+    format!("{result}")
 }
 
 #[test]
@@ -80,10 +80,10 @@ fn test_part_1() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day05/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day05/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_05(sample_input, Part::First);
-    assert_eq!(result, 35);
+    let result = run(&sample_input, Part::First);
+    assert_eq!(result, "35");
 }
 
 #[test]
@@ -91,8 +91,8 @@ fn test_part_2() {
     env::set_var("AOC_DEBUG", "1");
 
     let mut sample_input = String::new();
-    File::open("src/day05/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
+    File::open("src/days/day05/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run_day_05(sample_input, Part::Second);
-    assert_eq!(result, 46);
+    let result = run(&sample_input, Part::Second);
+    assert_eq!(result, "46");
 }
