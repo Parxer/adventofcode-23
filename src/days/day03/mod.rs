@@ -1,5 +1,5 @@
 use std::env;
-use crate::common::Part;
+use crate::common::{get_grid_neigh_indexes, Part};
 
 #[cfg(test)]
 use std::fs::File;
@@ -13,34 +13,13 @@ struct Number {
     end: [usize; 2]
 }
 
-fn neighbors_with_symbol(number: &Number, matrix: &Vec<Vec<bool>>) -> bool {
-    let mat_w = matrix[0].len();
-    let mat_h = matrix.len();
-
-    let i = number.start[0];
-    for j in number.start[1]..=number.end[1] {
-        if
-            (i > 0 && j > 0 && matrix[i-1][j-1]) ||
-            (i > 0 && matrix[i-1][j]) ||
-            (i > 0 && j + 1 < mat_w && matrix[i-1][j+1]) ||
-            (j > 0 && matrix[i][j-1]) ||
-            (j + 1 < mat_w && matrix[i][j+1]) ||
-            (i + 1 < mat_h && j > 0 && matrix[i+1][j-1]) ||
-            (i + 1 < mat_h && matrix[i+1][j]) ||
-            (i + 1 < mat_h && j + 1 < mat_w && matrix[i+1][j+1]) {
-            return true;
-        }
-    }
-    false
-}
-
 pub fn run(input: &String, part: Part) -> String {
     if part == Part::Second { return format!("N/A") }
     let mut result: u32 = 0;
 
     let w = input.lines().peekable().peek().unwrap().len();
     let h = input.lines().count();
-    let mut matrix = vec![vec![false; w]; h];
+    let mut grid = vec![vec![' '; w]; h];
     let mut numbers: Vec<Number> = vec![];
 
     let mut i = 0;
@@ -65,7 +44,7 @@ pub fn run(input: &String, part: Part) -> String {
                 });
             }
 
-            matrix[i][j] = !is_digit && c != '.';
+            grid[i][j] = if is_digit || c == '.' { ' ' } else { c }
         }
 
         if started_reading_number {
@@ -80,8 +59,19 @@ pub fn run(input: &String, part: Part) -> String {
     }
 
     for number in numbers {
-        let has_symbol = neighbors_with_symbol(&number, &matrix);
-        if has_symbol { result += number.value; }
+        let mut all_neighbors: Vec<char> = vec![];
+        (number.start[1]..=number.end[1]).for_each(|y| {
+            let i_neighbors = get_grid_neigh_indexes((number.start[0], y), (grid.len(), grid[0].len()));
+            for i_n in i_neighbors {
+                if i_n.0 != number.start[0] &&
+                    (number.start[1]..=number.end[1]).contains(&i_n.1) &&
+                    grid[i_n.0][i_n.1] != ' ' {all_neighbors.push(grid[i_n.0][i_n.1]) }
+            }
+        });
+        if all_neighbors.iter().filter(|&c| *c != ' ').count() > 0 {
+            println!("Number {} has a neighboring symbol(s): {:?}", number.value, all_neighbors);
+            result += number.value;
+        }
     }
 
     format!("{result}")

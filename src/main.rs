@@ -1,7 +1,7 @@
 pub mod common;
 mod days;
 
-use days::{ day01, day02, day03, day04, day05, day06, day07, day08, day09 };
+use days::{ day01, day02, day03, day04, day05, day06, day07, day08, day09, day10 };
 use std::env;
 use std::error::Error;
 use dotenv::dotenv;
@@ -58,6 +58,7 @@ fn run_day(year: i32, day: u32, session_cookie: &Option<String>) {
         7 => day07::run,
         8 => day08::run,
         9 => day09::run,
+        10 => day10::run,
         _ => unimplemented!()
     };
 
