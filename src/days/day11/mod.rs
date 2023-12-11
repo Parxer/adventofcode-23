@@ -2,23 +2,34 @@ use std::env;
 use std::fs::File;
 use std::io::Read;
 use rayon::prelude::*;
-use crate::common::{find_shortest_path, Part};
+use crate::common::{Part};
 
 
-pub fn run(input: &String, part: Part) -> String {
-    if part == Part::Second { return format!("N/A") } // TODO: delete later
-    let mut result = 0;
+pub fn run(input: &String, part: Part) -> String{
+    let expansion_rate = match part {
+        Part::First => { 2 }
+        Part::Second => { 1000000 }
+    };
+
+    run_with_expansion_rate(input, expansion_rate)
+}
+fn run_with_expansion_rate(input: &String, expansion_rate: usize) -> String {
+
+    let mut result: u64 = 0;
 
     let mut grid: Vec<Vec<char>> = vec![];
     let mut galaxies: Vec<(usize, usize)> = vec![];
 
-    for line in input.lines() {
+    let mut expanding_rows: Vec<usize> = vec![];
+    for (i, line) in input.lines().enumerate() {
         grid.push(line.chars().collect());
-        if line.chars().all(|c| c == '.') { grid.push(line.chars().collect()); }
+        if line.chars().all(|c| c == '.') {
+            expanding_rows.push(i);
+        }
     }
 
 
-    let mut columns_to_expand: Vec<usize> = vec![];
+    let mut expanding_columns: Vec<usize> = vec![];
     for c in 0..grid[0].len() {
         let mut is_empty = true;
         for r in 0..grid.len() {
@@ -27,13 +38,7 @@ pub fn run(input: &String, part: Part) -> String {
                 break;
             }
         }
-        if is_empty { columns_to_expand.push(c); }
-    }
-    columns_to_expand.reverse();
-    for c in columns_to_expand {
-        for r in 0..grid.len() {
-            grid[r].insert(c, '.');
-        }
+        if is_empty { expanding_columns.push(c); }
     }
 
     for r in 0..grid.len() {
@@ -42,15 +47,22 @@ pub fn run(input: &String, part: Part) -> String {
         }
     }
 
-    result = galaxies.par_iter().enumerate().fold(|| 0u32, |mut sum, (i_s, &start)| {
-        sum += galaxies.par_iter().skip(i_s + 1).fold(|| 0u32, |mut sum, &finish| {
-            let min = find_shortest_path(start, finish, &grid);
-            if env::var("AOC_DEBUG").is_ok() { println!("Path from {},{} to {},{}: {}", start.0, start.1, finish.0, finish.1, min); }
-            sum += min;
+    result = galaxies.par_iter().enumerate().fold(|| 0usize, |mut sum, (i_s, &start)| {
+        sum += galaxies.par_iter().skip(i_s + 1).fold(|| 0usize, |mut sum, &finish| {
+            let min: usize = start.0.abs_diff(finish.0) + start.1.abs_diff(finish.1);
+
+            let num_expanding_rows_crossed = expanding_rows.iter().filter(|&&i_r| {
+                i_r > start.0.min(finish.0) && i_r < start.0.max(finish.0)
+            }).count();
+            let num_expanding_cols_crossed = expanding_columns.iter().filter(|&&i_c| {
+                i_c > start.1.min(finish.1) && i_c < start.1.max(finish.1)
+            }).count();
+
+            sum += min + (expansion_rate - 1) * (num_expanding_rows_crossed + num_expanding_cols_crossed);
             sum
-        }).sum::<u32>();
+        }).sum::<usize>();
         sum
-    }).sum();
+    }).sum::<usize>().try_into().unwrap();
 
     format!("{result}")
 }
@@ -62,7 +74,7 @@ fn test_part_1() {
     let mut sample_input = String::new();
     File::open("src/days/day11/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run(&sample_input, Part::First);
+    let result = run_with_expansion_rate(&sample_input, 2);
     assert_eq!(result, "374");
 }
 
@@ -73,6 +85,6 @@ fn test_part_2() {
     let mut sample_input = String::new();
     File::open("src/days/day11/test_input").expect("Failed to open sample input").read_to_string(&mut sample_input).ok();
 
-    let result = run(&sample_input, Part::Second);
-    assert_eq!(result, "");
+    let result = run_with_expansion_rate(&sample_input, 10);
+    assert_eq!(result, "1030");
 }
